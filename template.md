@@ -11,6 +11,6 @@ Total starred repositories: `{{ .Total }}`
 {{ range $key, $value := .Stars }}
 ## {{ $key }}
 {{ range $value }}
-- [{{- .Name -}}]({{- .Url -}}) - {{ .Description }} {{ with .License}} \[*{{ . }}*\]{{ end }} (⭐️{{ .Stars }}) {{ if .Archived }}*Archived!*{{ end }}
+- [{{- .NameWithOwner -}}]({{- .Url -}}) - {{ .Description }} {{ with .License}} \[*{{ . }}*\]{{ end }} (⭐️{{ .Stars }}) {{ if .Archived }}*Archived!*{{ end }}
 {{- end }}
 {{ end }}
