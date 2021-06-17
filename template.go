@@ -18,9 +18,15 @@ type T struct {
 	Stars map[string][]Star
 }
 
-func writeReadme(stars map[string][]Star, total int) error {
+func writeList(path string, stars map[string][]Star, total int) error {
 
-	f, err := os.OpenFile("test.md", os.O_RDWR|os.O_CREATE, 0665)
+	if exists(path) {
+		err := os.Remove(path)
+		if err != nil {
+			return err
+		}
+	}
+	f, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE, 0665)
 	if err != nil {
 		return err
 	}

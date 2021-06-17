@@ -4,7 +4,7 @@
 Like an [![Awesome](https://awesome.re/badge.svg)](https://awesome.re) 
 list, but personal.
 
-# Inspiration
+## Inspiration
 
 *stargazer* is inspired by [starred](https://github.com/gmolveau/starred),
 which is very similar and written in python. I created *stargazer* because I

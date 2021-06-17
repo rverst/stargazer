@@ -58,7 +58,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	err = writeReadme(stars, total)
+	err = writeList("test.md", stars, total)
 	if err != nil {
 		log.Fatal(err)
 	}
