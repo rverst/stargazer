@@ -21,13 +21,16 @@ const (
 )
 
 var (
-	version = "dev"
+	version = ""
 	commit  = "none"
 	date    = "unknown"
 	builtBy = "unknown"
 )
 
 func main() {
+	if version == "" {
+		version = "dev"
+	}
 	flaggy.SetName(appName)
 	flaggy.SetDescription(appDesc)
 	flaggy.SetVersion(version)

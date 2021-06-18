@@ -9,10 +9,14 @@ on:
   schedule:
     - cron: '42 8 * * 1'
   push:
-    tags: [ 'v*.*.*' ]
+    branches:
+      - 'main'
+    tags:
+      - 'v*'
   workflow_dispatch:
   pull_request:
-    branches: [ main ]
+    branches:
+      - 'main'
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -32,6 +36,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      - name: Extract tag name
+        run: echo "VERSION=${GITHUB_REF#refs/*/v}" >> $GITHUB_ENV
 
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
@@ -57,6 +64,7 @@ jobs:
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: .
-          push: ${{ github.event_name != 'pull_request' }}
+          build-args: 'VERSION=${{ env.VERSION }}'
+          push: false #${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
