@@ -2,18 +2,22 @@ package main
 
 import (
 	"bufio"
-	"github.com/integrii/flaggy"
 	"log"
 	"os"
 	"strings"
+	"time"
+
+	"github.com/integrii/flaggy"
 )
 
 const (
 	appName = "stargazer"
 	appDesc = ""
 
-	envUser  = "GITHUB_USER"
-	envToken = "ACCESS_TOKEN"
+	defaultOutput = "README.md"
+	envUser       = "GITHUB_USER"
+	envToken      = "ACCESS_TOKEN"
+	envOutput     = "OUTPUT_FILE"
 )
 
 var (
@@ -28,9 +32,12 @@ func main() {
 	flaggy.SetDescription(appDesc)
 	flaggy.SetVersion(version)
 
-	var user, token string
+	var user, token, output string
+	var test bool
+	flaggy.String(&output, "o", "output-file", "the file to create (default:"+defaultOutput+" )")
 	flaggy.String(&user, "u", "github-user", "github user name")
 	flaggy.String(&token, "", "access-token", "github access token")
+	flaggy.Bool(&test, "t", "test", "just put out some test data")
 
 	flaggy.Parse()
 
@@ -40,6 +47,15 @@ func main() {
 	}
 
 	// flag > .env > environment
+	if output == "" {
+		output = os.Getenv(envOutput)
+		if v, ok := env[envOutput]; ok {
+			output = v
+		}
+		if output == "" {
+			output = defaultOutput
+		}
+	}
 	if user == "" {
 		user = os.Getenv(envUser)
 		if v, ok := env[envUser]; ok {
@@ -53,15 +69,39 @@ func main() {
 		}
 	}
 
-	stars, total,  err := fetchStars(user, token)
-	if err != nil {
-		log.Fatal(err)
+	var stars map[string][]Star
+	var total int
+	var err error
+	if test {
+		stars, total = testStars()
+	} else {
+		if stars, total, err = fetchStars(user, token); err != nil {
+			log.Fatal(err)
+		}
 	}
 
-	err = writeList("test.md", stars, total)
+	err = writeList(output, stars, total)
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func testStars() (stars map[string][]Star, total int) {
+
+	stars = make(map[string][]Star)
+	stars["go"] = make([]Star, 1)
+	stars["go"][0] = Star{
+		Url:           "https://github.com/rverst/stargazer",
+		Name:          "stargazer",
+		NameWithOwner: "rverst/stargazer",
+		Description:   "Creates awesome lists of your starred repositories",
+		License:       "MIT License",
+		Archived:      false,
+		StarredAt:     time.Now(),
+	}
+
+	total = 1
+	return
 }
 
 func parseEnvFile(file string) map[string]string {
