@@ -10,6 +10,7 @@ on:
     - cron: '42 8 * * 1'
   push:
     tags: [ 'v*.*.*' ]
+  workflow_dispatch:
   pull_request:
     branches: [ main ]
 
