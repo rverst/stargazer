@@ -32,6 +32,11 @@ func writeList(path string, stars map[string][]Star, total int) error {
 	}
 	defer f.Close()
 
+	err = f.Truncate(0)
+	if err != nil {
+		return err
+	}
+
 	return temp.Execute(f, T{Stars: stars, Total: total})
 }
 

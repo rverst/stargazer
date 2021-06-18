@@ -76,16 +76,13 @@ func fetchStars(user string, token string) (stars map[string][]Star, total int, 
 		if err != nil {
 			return
 		}
-		if total == 0 {
-			total = query.User.StarredRepositories.TotalCount
-		}
 
 		for _, e := range query.User.StarredRepositories.Edges {
 			// skip private repos
 			if e.Node.IsPrivate {
 				continue
 			}
-
+			total++
 			lng := "Unknown"
 			if len(e.Node.Languages.Edges) > 0 {
 				lng = e.Node.Languages.Edges[0].Node.Name
