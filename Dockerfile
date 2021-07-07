@@ -1,4 +1,4 @@
-FROM ghcr.io/rverst/stargazer:v1.0.2
+FROM ghcr.io/rverst/stargazer:latest
 
 COPY entrypoint.sh /entrypoint.sh
 
