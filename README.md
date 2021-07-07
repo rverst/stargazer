@@ -4,7 +4,9 @@
 Like an [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
 list, but personal. Automated with GitHub-Actions.
 
-See [rverst/stars](https://github.com/rverst/stars) for an example.
+See [rverst/stars](https://github.com/rverst/stars) for an example. You can use
+that repositorie as a template, the README.md will get overwritte with your own
+list if you run the stargazer-action (runs daily at 02:42).
 
 ## Usage
 
