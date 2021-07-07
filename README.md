@@ -8,6 +8,7 @@ list, but personal.
 
 Probably the easiest way to get your own stargazer list is to have a
 repository with a workflow that uses the GitHub action.
+All you need to do is create a new repository and create the following workflow.
 
 ```yaml
 # This workflow builds a list of your starred repositories
