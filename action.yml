@@ -1,0 +1,28 @@
+name: 'Stargazer Action'
+description: 'Generates a list of starred repositories'
+inputs:
+  github-user:
+    description: 'Github user whose stars are fetched'
+    required: true
+    default: ''
+  github-token:
+    description: 'Access token for the github API'
+    required: true
+    default: ''
+  list-file:
+    description: 'Filename of the stargazer list'
+    required: false
+    default: 'README.md'
+  ignored-repositories:
+    description: 'Comma separated list of repositories to ignore'
+    required: false
+    default: ''
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.github-user }}
+    - ${{ inputs.github-token }}
+    - ${{ inputs.list-file }}
+    - ${{ inputs.ignored-repositories }}
+
