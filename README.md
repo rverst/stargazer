@@ -30,7 +30,7 @@ jobs:
       # Generate the list
       - name: Create star list
         id: stargazer
-        uses: rverst/stargazer@5e231084ea229d6649fcaeaa04c4f3e336b57139
+        uses: rverst/stargazer@v1.1.1
         with:
           github-user: ${{ github.actor }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -57,10 +57,10 @@ jobs:
 ## Inputs
 
 | Name | Type | Required | Description |
-|------|------|----------|---------|-------------|
-| github-user | string | true GitHub user whose stars are fetched |
-| github-token | string | true Access token for the GitHub API |
-| list-file | string | false Filename of the stargazer list (default: README.md) |
+|------|------|----------|-------------|
+| github-user | string | true | GitHub user whose stars are fetched |
+| github-token | string | true | Access token for the GitHub API |
+| list-file | string | false | Filename of the stargazer list (default: README.md) |
 | ignored-repositories | string | false | Comma separated list of repositories (user/repo) to ignore |
 
 ## Inspiration
