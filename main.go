@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"log"
 	"os"
+	"sort"
 	"strings"
 	"time"
 
@@ -98,6 +99,13 @@ func main() {
 		if stars, total, err = fetchStars(user, token); err != nil {
 			log.Fatal(err)
 		}
+	}
+
+	for k, v := range stars {
+		sort.Slice(v, func(i, j int) bool {
+			return strings.ToLower(v[i].NameWithOwner) < strings.ToLower(v[j].NameWithOwner)
+		})
+		stars[k] = v
 	}
 
 	err = writeList(output, stars, total)
