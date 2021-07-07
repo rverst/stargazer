@@ -1,8 +1,10 @@
 # stargazer
 
-*stargazer* creates a sorted list of your stared github repositories.
+*stargazer* creates a sorted list of your stared GitHub repositories.
 Like an [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
-list, but personal.
+list, but personal. Automated with GitHub-Actions.
+
+See [rverst/stars](https://github.com/rverst/stars) for an example.
 
 ## Usage
 
