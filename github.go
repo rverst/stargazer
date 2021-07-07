@@ -82,6 +82,10 @@ func fetchStars(user string, token string) (stars map[string][]Star, total int, 
 			if e.Node.IsPrivate {
 				continue
 			}
+			if isIgnored(e.Node.NameWithOwner) {
+				continue
+			}
+
 			total++
 			lng := "Unknown"
 			if len(e.Node.Languages.Edges) > 0 {

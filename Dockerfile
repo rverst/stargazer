@@ -20,5 +20,6 @@ RUN mkdir /data
 ENV OUTPUT_FILE "/data/README.md"
 ENV GITHUB_USER ""
 ENV ACCESS_TOKEN ""
+ENV IGNORE_REPOS ""
 
 ENTRYPOINT ["stargazer"]
