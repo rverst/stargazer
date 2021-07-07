@@ -1,5 +1,7 @@
 name: 'Stargazer Action'
 description: 'Generates a list of starred repositories'
+icon: 'star'
+color: 'yellow'
 inputs:
   github-user:
     description: 'Github user whose stars are fetched'
