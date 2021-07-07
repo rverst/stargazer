@@ -19,7 +19,7 @@ inputs:
     default: ''
 runs:
   using: 'docker'
-  image: './Dockerfile.action'
+  image: 'Dockerfile'
   args:
     - ${{ inputs.github-user }}
     - ${{ inputs.github-token }}
