@@ -1,6 +1,6 @@
 FROM golang:1.16 AS builder
 
-ARG VERSION=unknwown
+ARG VERSION=unknown
 
 WORKDIR $GOPATH/src/github.com/rverst/stargazer
 
