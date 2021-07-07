@@ -1,6 +1,6 @@
 FROM golang:1.16 AS builder
 
-ARG VERSION=unknwown
+ARG VERSION=unknown
 
 WORKDIR $GOPATH/src/github.com/rverst/stargazer
 
@@ -20,5 +20,6 @@ RUN mkdir /data
 ENV OUTPUT_FILE "/data/README.md"
 ENV GITHUB_USER ""
 ENV ACCESS_TOKEN ""
+ENV IGNORE_REPOS ""
 
 ENTRYPOINT ["stargazer"]

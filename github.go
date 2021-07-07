@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/shurcooL/githubv4"
 	"golang.org/x/oauth2"
+	"strings"
 	"time"
 )
 
@@ -13,6 +14,7 @@ type Star struct {
 	NameWithOwner string
 	Description   string
 	License       string
+	LicenseUrl    string
 	Stars         int
 	Archived      bool
 	StarredAt     time.Time
@@ -36,6 +38,8 @@ var query struct {
 					} `graphql:"languages(first: $lc, orderBy: {field: SIZE, direction: DESC})"`
 					LicenseInfo struct {
 						Name string
+						Nickname string
+						Url string
 					}
 					IsArchived     bool
 					IsPrivate      bool
@@ -82,6 +86,10 @@ func fetchStars(user string, token string) (stars map[string][]Star, total int, 
 			if e.Node.IsPrivate {
 				continue
 			}
+			if isIgnored(e.Node.NameWithOwner) {
+				continue
+			}
+
 			total++
 			lng := "Unknown"
 			if len(e.Node.Languages.Edges) > 0 {
@@ -90,12 +98,24 @@ func fetchStars(user string, token string) (stars map[string][]Star, total int, 
 			if _, ok := stars[lng]; !ok {
 				stars[lng] = make([]Star, 0)
 			}
+
+			var lic string
+			if e.Node.LicenseInfo.Nickname != "" {
+				lic = e.Node.LicenseInfo.Nickname
+			} else {
+				lic = e.Node.LicenseInfo.Name
+			}
+			if strings.ToLower(lic) == "other" {
+				lic = ""
+			}
+
 			stars[lng] = append(stars[lng], Star{
 				Url:           e.Node.Url,
 				Name:          e.Node.Name,
 				NameWithOwner: e.Node.NameWithOwner,
 				Description:   e.Node.Description,
-				License:       e.Node.LicenseInfo.Name,
+				License:       lic,
+				LicenseUrl:    e.Node.LicenseInfo.Url,
 				Stars:         e.Node.StargazerCount,
 				Archived:      e.Node.IsArchived,
 				StarredAt:     e.StarredAt,

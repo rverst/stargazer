@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"log"
 	"os"
+	"sort"
 	"strings"
 	"time"
 
@@ -18,6 +19,7 @@ const (
 	envUser       = "GITHUB_USER"
 	envToken      = "ACCESS_TOKEN"
 	envOutput     = "OUTPUT_FILE"
+	envIgnore     = "IGNORE_REPOS"
 )
 
 var (
@@ -25,6 +27,7 @@ var (
 	commit  = "none"
 	date    = "unknown"
 	builtBy = "unknown"
+	ignored []string
 )
 
 func main() {
@@ -40,6 +43,7 @@ func main() {
 	flaggy.String(&output, "o", "output-file", "the file to create (default:"+defaultOutput+" )")
 	flaggy.String(&user, "u", "github-user", "github user name")
 	flaggy.String(&token, "", "access-token", "github access token")
+	flaggy.StringSlice(&ignored, "i", "ignore", "repositories to ignore (flag can be specified multiple times)")
 	flaggy.Bool(&test, "t", "test", "just put out some test data")
 
 	flaggy.Parse()
@@ -71,6 +75,20 @@ func main() {
 			token = v
 		}
 	}
+	if len(ignored) == 0 {
+		ig := os.Getenv(envIgnore)
+		if v, ok := env[envIgnore]; ok {
+			ig = v
+		}
+		sp := strings.Split(ig, ",")
+		ignored = make([]string, 0)
+		for _, s := range sp {
+			s := strings.Trim(s, " ")
+			if s != "" {
+				ignored = append(ignored, s)
+			}
+		}
+	}
 
 	var stars map[string][]Star
 	var total int
@@ -83,17 +101,36 @@ func main() {
 		}
 	}
 
+	for k, v := range stars {
+		sort.Slice(v, func(i, j int) bool {
+			return strings.ToLower(v[i].NameWithOwner) < strings.ToLower(v[j].NameWithOwner)
+		})
+		stars[k] = v
+	}
+
 	err = writeList(output, stars, total)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
+func isIgnored(name string) bool {
+	if len(ignored) == 0 {
+		return false
+	}
+	for _, i := range ignored {
+		if strings.ToLower(i) == strings.ToLower(name) {
+			return true
+		}
+	}
+	return false
+}
+
 func testStars() (stars map[string][]Star, total int) {
 
 	stars = make(map[string][]Star)
 	stars["go"] = make([]Star, 1)
-	stars["go"][0] = Star{
+	s := Star{
 		Url:           "https://github.com/rverst/stargazer",
 		Name:          "stargazer",
 		NameWithOwner: "rverst/stargazer",
@@ -101,6 +138,10 @@ func testStars() (stars map[string][]Star, total int) {
 		License:       "MIT License",
 		Archived:      false,
 		StarredAt:     time.Now(),
+	}
+
+	if !isIgnored(s.NameWithOwner) {
+		stars["go"][0] = s
 	}
 
 	total = 1
