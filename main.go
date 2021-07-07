@@ -17,16 +17,13 @@ const (
 
 	defaultOutput = "README.md"
 	envUser       = "GITHUB_USER"
-	envToken      = "ACCESS_TOKEN"
+	envToken      = "GITHUB_TOKEN"
 	envOutput     = "OUTPUT_FILE"
 	envIgnore     = "IGNORE_REPOS"
 )
 
 var (
 	version = ""
-	commit  = "none"
-	date    = "unknown"
-	builtBy = "unknown"
 	ignored []string
 )
 
@@ -42,7 +39,7 @@ func main() {
 	var test bool
 	flaggy.String(&output, "o", "output-file", "the file to create (default:"+defaultOutput+" )")
 	flaggy.String(&user, "u", "github-user", "github user name")
-	flaggy.String(&token, "", "access-token", "github access token")
+	flaggy.String(&token, "", "github-token", "github access token")
 	flaggy.StringSlice(&ignored, "i", "ignore", "repositories to ignore (flag can be specified multiple times)")
 	flaggy.Bool(&test, "t", "test", "just put out some test data")
 

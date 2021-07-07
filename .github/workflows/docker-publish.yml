@@ -9,8 +9,6 @@ on:
   schedule:
     - cron: '42 8 * * 1'
   push:
-    branches:
-      - 'main'
     tags:
       - 'v*'
   workflow_dispatch:
