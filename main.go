@@ -16,10 +16,13 @@ const (
 	appDesc = ""
 
 	defaultOutput = "README.md"
-	envUser       = "GITHUB_USER"
-	envToken      = "GITHUB_TOKEN"
-	envOutput     = "OUTPUT_FILE"
-	envIgnore     = "IGNORE_REPOS"
+	defaultFormat = "list"
+
+	envUser   = "GITHUB_USER"
+	envToken  = "GITHUB_TOKEN"
+	envOutput = "OUTPUT_FILE"
+	envFormat = "OUTPUT_FORMAT"
+	envIgnore = "IGNORE_REPOS"
 )
 
 var (
@@ -35,9 +38,15 @@ func main() {
 	flaggy.SetDescription(appDesc)
 	flaggy.SetVersion(version)
 
-	var user, token, output string
+	var user, token, output, format string
 	var test bool
 	flaggy.String(&output, "o", "output-file", "the file to create (default:"+defaultOutput+" )")
+	flaggy.String(
+		&format,
+		"f",
+		"output-format",
+		"the format of the output ["+ strings.Join(availableFormats, ", ") +"] (default:"+defaultFormat+" )",
+	)
 	flaggy.String(&user, "u", "github-user", "github user name")
 	flaggy.String(&token, "", "github-token", "github access token")
 	flaggy.StringSlice(&ignored, "i", "ignore", "repositories to ignore (flag can be specified multiple times)")
@@ -58,6 +67,15 @@ func main() {
 		}
 		if output == "" {
 			output = defaultOutput
+		}
+	}
+	if format == "" {
+		format = os.Getenv(envFormat)
+		if v, ok := env[envFormat]; ok {
+			format = v
+		}
+		if format == "" {
+			format = defaultFormat
 		}
 	}
 	if user == "" {
@@ -85,6 +103,14 @@ func main() {
 				ignored = append(ignored, s)
 			}
 		}
+  }
+
+  if token == "" {
+    log.Fatal("github token is required")
+  }
+
+	if err := initTemplate(TemplateType(format)); err != nil {
+		log.Fatal(err)
 	}
 
 	var stars map[string][]Star
@@ -124,7 +150,6 @@ func isIgnored(name string) bool {
 }
 
 func testStars() (stars map[string][]Star, total int) {
-
 	stars = make(map[string][]Star)
 	stars["go"] = make([]Star, 1)
 	s := Star{
@@ -146,7 +171,6 @@ func testStars() (stars map[string][]Star, total int) {
 }
 
 func parseEnvFile(file string) map[string]string {
-
 	env := make(map[string]string)
 	f, err := os.Open(file)
 	if err != nil {
