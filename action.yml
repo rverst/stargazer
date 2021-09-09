@@ -16,10 +16,26 @@ inputs:
     description: 'Filename of the stargazer list'
     required: false
     default: 'README.md'
+  format:
+    description: 'Format of the stargazer list [list, table]'
+    required: false
+    default: 'list.md'
   ignored-repositories:
     description: 'Comma separated list of repositories to ignore'
     required: false
     default: ''
+  with-poc:
+    description: 'Print table of contents'
+    required: false
+    default: 'true'
+  with-license:
+    description: 'Print license of repositories'
+    required: false
+    default: 'true'
+  with-stars:
+    description: 'Print starcount of repositories'
+    required: false
+    default: 'true'
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -27,5 +43,9 @@ runs:
     - ${{ inputs.github-user }}
     - ${{ inputs.github-token }}
     - ${{ inputs.list-file }}
+    - ${{ inputs.format }}
     - ${{ inputs.ignored-repositories }}
+    - ${{ inputs.with-poc }}
+    - ${{ inputs.with-license }}
+    - ${{ inputs.with-stars }}
 

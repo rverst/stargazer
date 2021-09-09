@@ -1,4 +1,4 @@
-FROM golang:1.16 AS builder
+FROM golang:1.17 AS builder
 
 ARG VERSION=unknown
 
@@ -18,8 +18,12 @@ COPY --from=builder /stargazer /usr/bin/stargazer
 RUN mkdir /data
 
 ENV OUTPUT_FILE "/data/README.md"
+ENV OUTPUT_FORMAT "list"
 ENV GITHUB_USER ""
 ENV GITHUB_TOKEN ""
 ENV IGNORE_REPOS ""
+ENV WITH_TOC "true"
+ENV WITH_LICENSE "true"
+ENV WITH_STARS "true"
 
 ENTRYPOINT ["stargazer"]
