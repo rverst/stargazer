@@ -40,8 +40,6 @@ jobs:
           github-user: ${{ github.actor }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           list-file: "README.md"
-          # you can ignore repositories, that will not get on the list
-          # ignored-repositories: ${{ secrets.IGNORE_REPO }}
 
       # Commit the changes
       - name: Commit files
@@ -66,7 +64,7 @@ jobs:
 | github-user | string | true | GitHub user whose stars are fetched |
 | github-token | string | true | Access token for the GitHub API |
 | list-file | string | false | Filename of the stargazer list (default: README.md) |
-| format | string | false | Format of the stargazer list [list, table, <custom>] (default: list) |
+| format | string | false | Format of the stargazer list [list, table, \<custom\>] (default: list) |
 | ignored-repositories | string | false | Comma separated list of repositories (user/repo) to ignore |
 | with-toc | bool | false | Print table of contents (default: true) |
 | with-license | bool | false | Print license of repositories (default: true) |
