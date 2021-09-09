@@ -24,7 +24,7 @@ inputs:
     description: 'Comma separated list of repositories to ignore'
     required: false
     default: ''
-  with-poc:
+  with-toc:
     description: 'Print table of contents'
     required: false
     default: 'true'
@@ -45,7 +45,7 @@ runs:
     - ${{ inputs.list-file }}
     - ${{ inputs.format }}
     - ${{ inputs.ignored-repositories }}
-    - ${{ inputs.with-poc }}
+    - ${{ inputs.with-toc }}
     - ${{ inputs.with-license }}
     - ${{ inputs.with-stars }}
 

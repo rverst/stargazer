@@ -68,7 +68,7 @@ jobs:
 | list-file | string | false | Filename of the stargazer list (default: README.md) |
 | format | string | false | Format of the stargazer list [list, table, <custom>] (default: list) |
 | ignored-repositories | string | false | Comma separated list of repositories (user/repo) to ignore |
-| with-poc | bool | false | Print table of contents (default: true) |
+| with-toc | bool | false | Print table of contents (default: true) |
 | with-license | bool | false | Print license of repositories (default: true) |
 | with-stars | bool | false | Print starcount of repositories (default: true) |
 
