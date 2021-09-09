@@ -37,9 +37,9 @@ var query struct {
 						}
 					} `graphql:"languages(first: $lc, orderBy: {field: SIZE, direction: DESC})"`
 					LicenseInfo struct {
-						Name string
+						Name     string
 						Nickname string
-						Url string
+						Url      string
 					}
 					IsArchived     bool
 					IsPrivate      bool

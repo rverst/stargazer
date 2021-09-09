@@ -35,7 +35,7 @@ jobs:
       # Generate the list
       - name: Create star list
         id: stargazer
-        uses: rverst/stargazer@v1.1.1
+        uses: rverst/stargazer@v1.2.0
         with:
           github-user: ${{ github.actor }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -66,7 +66,18 @@ jobs:
 | github-user | string | true | GitHub user whose stars are fetched |
 | github-token | string | true | Access token for the GitHub API |
 | list-file | string | false | Filename of the stargazer list (default: README.md) |
+| format | string | false | Format of the stargazer list [list, table, <custom>] (default: list) |
 | ignored-repositories | string | false | Comma separated list of repositories (user/repo) to ignore |
+| with-poc | bool | false | Print table of contents (default: true) |
+| with-license | bool | false | Print license of repositories (default: true) |
+| with-stars | bool | false | Print starcount of repositories (default: true) |
+
+## Custom templates
+
+You can put your own templates in the repository and give its name as `format`. Have a look at
+the included templates to get an understanding of the template model. Use `{{ printf "%#v" . }}`
+to print the underlying struct.  
+If you use a custom template, please be so kind and credit this repository, thanks a lot!
 
 ## Inspiration
 
