@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
 	"sort"
@@ -16,8 +17,11 @@ const (
 	appName = "stargazer"
 	appDesc = ""
 
-	defaultOutput = "README.md"
-	defaultFormat = "list"
+	defaultOutput      = "README.md"
+	defaultFormat      = "list"
+	defaultWithToc     = true
+	defaultWithStars   = true
+	defaultWithLicense = true
 
 	envUser   = "GITHUB_USER"
 	envToken  = "GITHUB_TOKEN"
@@ -25,6 +29,7 @@ const (
 	envFormat = "OUTPUT_FORMAT"
 	envIgnore = "IGNORE_REPOS"
 
+	envToc     = "WITH_TOC"
 	envStars   = "WITH_STARS"
 	envLicense = "WITH_LICENSE"
 )
@@ -32,6 +37,7 @@ const (
 var (
 	version = ""
 	ignored []string
+	env     map[string]string
 )
 
 func main() {
@@ -43,8 +49,8 @@ func main() {
 	flaggy.SetVersion(version)
 
 	var user, token, output, format string
-	var test, wStars, wLicense bool
-	wStars, wLicense = true, true
+	var test, wToc, wStars, wLicense bool
+	wToc, wStars, wLicense = true, true, true
 	flaggy.String(&output, "o", "output-file", "the file to create (default:"+defaultOutput+" )")
 	flaggy.String(
 		&format,
@@ -56,52 +62,31 @@ func main() {
 	flaggy.String(&token, "", "github-token", "github access token")
 	flaggy.StringSlice(&ignored, "i", "ignore", "repositories to ignore (flag can be specified multiple times)")
 	flaggy.Bool(&test, "t", "test", "just put out some test data")
+	flaggy.Bool(&wToc, "", "with-toc", "print table of contents")
 	flaggy.Bool(&wStars, "", "with-stars", "print starcount of repositories")
 	flaggy.Bool(&wLicense, "", "with-license", "print license of repositories")
 
 	flaggy.Parse()
 
-	var env map[string]string
 	if exists(".env") {
 		env = parseEnvFile(".env")
 	}
 
 	// flag > .env > environment
 	if output == "" {
-		output = os.Getenv(envOutput)
-		if v, ok := env[envOutput]; ok {
-			output = v
-		}
-		if output == "" {
-			output = defaultOutput
-		}
+		output = getEnv(envOutput, defaultOutput)
 	}
 	if format == "" {
-		format = os.Getenv(envFormat)
-		if v, ok := env[envFormat]; ok {
-			format = v
-		}
-		if format == "" {
-			format = defaultFormat
-		}
+		format = getEnv(envFormat, string(defaultFormat))
 	}
 	if user == "" {
-		user = os.Getenv(envUser)
-		if v, ok := env[envUser]; ok {
-			user = v
-		}
+		user = getEnv(envUser, "")
 	}
 	if token == "" {
-		token = os.Getenv(envToken)
-		if v, ok := env[envToken]; ok {
-			token = v
-		}
+		token = getEnv(envToken, "")
 	}
 	if len(ignored) == 0 {
-		ig := os.Getenv(envIgnore)
-		if v, ok := env[envIgnore]; ok {
-			ig = v
-		}
+		ig := getEnv(envIgnore, "")
 		sp := strings.Split(ig, ",")
 		ignored = make([]string, 0)
 		for _, s := range sp {
@@ -112,27 +97,30 @@ func main() {
 		}
 	}
 
-	var e string
-	var ok bool
-	if e, ok = env[envStars]; !ok {
-		e = os.Getenv(envStars)
+	if wToc == defaultWithToc {
+		v := getEnv(envToc, fmt.Sprintf("%t", defaultWithToc))
+		if b, err := strconv.ParseBool(v); err == nil {
+			wToc = b
+		}
 	}
-	if b, err := strconv.ParseBool(e); err == nil {
-		wStars = b
+	if wStars == defaultWithStars {
+		v := getEnv(envStars, fmt.Sprintf("%t", defaultWithStars))
+		if b, err := strconv.ParseBool(v); err == nil {
+			wStars = b
+		}
 	}
-
-	if e, ok = env[envLicense]; !ok {
-		e = os.Getenv(envLicense)
-	}
-	if b, err := strconv.ParseBool(e); err == nil {
-		wLicense = b
+	if wLicense == defaultWithLicense {
+		v := getEnv(envLicense, fmt.Sprintf("%t", defaultWithLicense))
+		if b, err := strconv.ParseBool(v); err == nil {
+			wLicense = b
+		}
 	}
 
 	if token == "" {
 		log.Fatal("github token is required")
 	}
 
-	if err := initTemplate(TemplateType(format)); err != nil {
+	if err := initTemplate(format); err != nil {
 		log.Fatal(err)
 	}
 
@@ -154,7 +142,7 @@ func main() {
 		stars[k] = v
 	}
 
-	err = writeList(output, stars, total, wLicense, wStars)
+	err = writeList(output, stars, total, wToc, wLicense, wStars)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -181,16 +169,42 @@ func testStars() (stars map[string][]Star, total int) {
 		NameWithOwner: "rverst/stargazer",
 		Description:   "Creates awesome lists of your starred repositories",
 		License:       "MIT License",
+		Stars:         1,
 		Archived:      false,
 		StarredAt:     time.Now(),
 	}
-
 	if !isIgnored(s.NameWithOwner) {
 		stars["go"][0] = s
 	}
+	stars["markdown"] = make([]Star, 1)
+	s = Star{
+		Url:           "https://github.com/rverst/stars",
+		Name:          "stars",
+		NameWithOwner: "rverst/stars",
+		Description:   "A list of awesome repositories I starred",
+		License:       "MIT License",
+		Stars:         1,
+		Archived:      false,
+		StarredAt:     time.Now(),
+	}
+	if !isIgnored(s.NameWithOwner) {
+		stars["markdown"][0] = s
+	}
 
-	total = 1
+	total = 2
 	return
+}
+
+// .env > environment
+func getEnv(key, defVal string) string {
+	val := os.Getenv(key)
+	if v, ok := env[key]; ok {
+		val = v
+	}
+	if val == "" {
+		return defVal
+	}
+	return val
 }
 
 func parseEnvFile(file string) map[string]string {
