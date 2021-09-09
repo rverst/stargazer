@@ -191,7 +191,36 @@ func testStars() (stars map[string][]Star, total int) {
 		stars["markdown"][0] = s
 	}
 
-	total = 2
+	stars["markdown"] = append(stars["markdown"], Star{
+		Url:           "https://github.com/rverst/test",
+		Name:          "test",
+		NameWithOwner: "rverst/test",
+		Description:   "",
+		License:       "MIT License",
+		Stars:         1,
+		StarredAt:     time.Now(),
+	})
+	stars["markdown"] = append(stars["markdown"], Star{
+		Url:           "https://github.com/rverst/test_2",
+		Name:          "test_2",
+		NameWithOwner: "rverst/test_2",
+		Description:   "Some description",
+		License:       "",
+		Stars:         1,
+		StarredAt:     time.Now(),
+	})
+
+	stars["markdown"] = append(stars["markdown"], Star{
+		Url:           "https://github.com/rverst/test_3",
+		Name:          "test_3",
+		NameWithOwner: "rverst/test_3",
+		Description:   "",
+		License:       "",
+		Stars:         1,
+		StarredAt:     time.Now(),
+	})
+
+	total = 4
 	return
 }
 

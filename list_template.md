@@ -16,8 +16,8 @@ Total starred repositories: `{{ .Total }}`
 ## {{ $key }}
     {{ range $value }}
 - [{{- .NameWithOwner -}}]({{- .Url -}}) - {{ .Description }} 
-{{ if $l }}{{ with .License}}\[*{{ . }}*\]{{ end }}{{ end }}
-{{ if $s }} (⭐️{{ .Stars }}) {{ end }}
-{{ if .Archived }}*Archived!*{{ end }}
+{{- if $l }}{{ with .License}}\[*{{ . }}*\]{{ end }}{{ end -}}
+{{- if $s }} (⭐️{{ .Stars }}) {{ end -}}
+{{- if .Archived }}*Archived!*{{ end -}}
     {{- end }}
 {{ end }}
