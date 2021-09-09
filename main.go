@@ -77,7 +77,7 @@ func main() {
 		output = getEnv(envOutput, defaultOutput)
 	}
 	if format == "" {
-		format = getEnv(envFormat, string(defaultFormat))
+		format = getEnv(envFormat, defaultFormat)
 	}
 	if user == "" {
 		user = getEnv(envUser, "")

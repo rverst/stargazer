@@ -47,9 +47,9 @@ type C struct {
 func initTemplate(tType string) (err error) {
 	var t string
 	switch tType {
-	case table:
+	case "table":
 		t = table
-	case list:
+	case "list":
 		t = list
 	default:
 		if exists(tType) {
