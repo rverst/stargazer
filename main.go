@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
@@ -23,6 +24,9 @@ const (
 	envOutput = "OUTPUT_FILE"
 	envFormat = "OUTPUT_FORMAT"
 	envIgnore = "IGNORE_REPOS"
+
+	envStars   = "WITH_STARS"
+	envLicense = "WITH_LICENSE"
 )
 
 var (
@@ -39,18 +43,21 @@ func main() {
 	flaggy.SetVersion(version)
 
 	var user, token, output, format string
-	var test bool
+	var test, wStars, wLicense bool
+	wStars, wLicense = true, true
 	flaggy.String(&output, "o", "output-file", "the file to create (default:"+defaultOutput+" )")
 	flaggy.String(
 		&format,
 		"f",
 		"output-format",
-		"the format of the output ["+ strings.Join(availableFormats, ", ") +"] (default:"+defaultFormat+" )",
+		"the format of the output ["+strings.Join(availableFormats, ", ")+"] (default:"+defaultFormat+" )",
 	)
 	flaggy.String(&user, "u", "github-user", "github user name")
 	flaggy.String(&token, "", "github-token", "github access token")
 	flaggy.StringSlice(&ignored, "i", "ignore", "repositories to ignore (flag can be specified multiple times)")
 	flaggy.Bool(&test, "t", "test", "just put out some test data")
+	flaggy.Bool(&wStars, "", "with-stars", "print starcount of repositories")
+	flaggy.Bool(&wLicense, "", "with-license", "print license of repositories")
 
 	flaggy.Parse()
 
@@ -103,11 +110,27 @@ func main() {
 				ignored = append(ignored, s)
 			}
 		}
-  }
+	}
 
-  if token == "" {
-    log.Fatal("github token is required")
-  }
+	var e string
+	var ok bool
+	if e, ok = env[envStars]; !ok {
+		e = os.Getenv(envStars)
+	}
+	if b, err := strconv.ParseBool(e); err == nil {
+		wStars = b
+	}
+
+	if e, ok = env[envLicense]; !ok {
+		e = os.Getenv(envLicense)
+	}
+	if b, err := strconv.ParseBool(e); err == nil {
+		wLicense = b
+	}
+
+	if token == "" {
+		log.Fatal("github token is required")
+	}
 
 	if err := initTemplate(TemplateType(format)); err != nil {
 		log.Fatal(err)
@@ -131,7 +154,7 @@ func main() {
 		stars[k] = v
 	}
 
-	err = writeList(output, stars, total)
+	err = writeList(output, stars, total, wLicense, wStars)
 	if err != nil {
 		log.Fatal(err)
 	}
