@@ -116,7 +116,7 @@ func main() {
 		}
 	}
 
-	if token == "" {
+	if token == "" && !test {
 		log.Fatal("github token is required")
 	}
 
@@ -191,7 +191,11 @@ func testStars() (stars map[string][]Star, total int) {
 		stars["markdown"][0] = s
 	}
 
-	stars["markdown"] = append(stars["markdown"], Star{
+	stars["C#"] = make([]Star, 0)
+	stars["C++"] = make([]Star, 0)
+	stars["C##"] = make([]Star, 0)
+
+	stars["C#"] = append(stars["C#"], Star{
 		Url:           "https://github.com/rverst/test",
 		Name:          "test",
 		NameWithOwner: "rverst/test",
@@ -200,7 +204,7 @@ func testStars() (stars map[string][]Star, total int) {
 		Stars:         1,
 		StarredAt:     time.Now(),
 	})
-	stars["markdown"] = append(stars["markdown"], Star{
+	stars["C++"] = append(stars["C++"], Star{
 		Url:           "https://github.com/rverst/test_2",
 		Name:          "test_2",
 		NameWithOwner: "rverst/test_2",
@@ -210,7 +214,7 @@ func testStars() (stars map[string][]Star, total int) {
 		StarredAt:     time.Now(),
 	})
 
-	stars["markdown"] = append(stars["markdown"], Star{
+	stars["C##"] = append(stars["C##"], Star{
 		Url:           "https://github.com/rverst/test_3",
 		Name:          "test_3",
 		NameWithOwner: "rverst/test_3",

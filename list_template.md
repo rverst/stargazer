@@ -7,9 +7,7 @@ Total starred repositories: `{{ .Total }}`
 
 {{ if .WithToc }}
 ## Contents
-    {{ range $key, $value := .Stars }}
-* [{{ $key }}](#{{ anchor $key }}) ({{ len $value }})
-    {{- end }}
+{{ .Toc }}
 {{- end }}
 
 {{ range $key, $value := .Stars }}
