@@ -1,4 +1,5 @@
 # stargazer
+[![Docker](https://github.com/rverst/stargazer/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/rverst/stargazer/actions/workflows/docker-publish.yml)
 
 *stargazer* creates a sorted list of your stared GitHub repositories.
 Like an [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
