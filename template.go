@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"sort"
 	"strings"
 	"text/template"
 )
@@ -35,7 +36,8 @@ type T struct {
 	WithToc     bool
 	WithLicense bool
 	WithStars   bool
-	Toc         string
+	Keys        []string
+	Anchors     map[string]string
 	Stars       map[string][]Star
 	Credits     C
 }
@@ -65,8 +67,7 @@ func initTemplate(tType string) (err error) {
 		}
 	}
 
-	temp, err = template.New("readme").
-		Funcs(template.FuncMap{"anchor": Anchor}).Parse(t)
+	temp, err = template.New("readme").Parse(t)
 
 	return
 }
@@ -99,9 +100,16 @@ func writeList(path string, stars map[string][]Star, total int, withToc, withLic
 		Link: "[stargazer](" + creditUrl + ")",
 	}
 
+	keys := make([]string, 0)
+	for k := range stars {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
 	return temp.Execute(f, T{
+		Keys:        keys,
+		Anchors:     toc(keys),
 		Stars:       stars,
-		Toc:         toc(stars),
 		Total:       total,
 		Credits:     c,
 		WithToc:     withToc,
@@ -110,31 +118,25 @@ func writeList(path string, stars map[string][]Star, total int, withToc, withLic
 	})
 }
 
-// todo: check rules for markdown anchors...
-func Anchor(s string) string {
-	return strings.Replace(strings.ToLower(s), " ", "-", -1)
-}
-
-// toc returns a table of contents
-func toc(stars map[string][]Star) string {
+// toc returns the anchors for the table of contents
+func toc(keys []string) map[string]string {
 	rx := regexp.MustCompile(`[^\w\- ]`) // regexp to remove all punctuation
+	anchors := make(map[string]string, 0)
 
-	header := make(map[string]string, 0)
-
-	for k := range stars {
-		x := strings.TrimSpace(k)
+	for _, k := range keys {
+		x := strings.ToLower(strings.TrimSpace(k))
 		x = rx.ReplaceAllString(x, "")
 		x = strings.ReplaceAll(x, " ", "-")
 
 		c := 0
-		add := true
 		for {
+			add := true
 			y := x
 			if c > 0 {
 				y += fmt.Sprintf("-%d", c)
 			}
-			for h := range header {
-				if h == y {
+			for _, val := range anchors {
+				if val == y {
 					c++
 					add = false
 					break
@@ -144,13 +146,9 @@ func toc(stars map[string][]Star) string {
 			if !add {
 				continue
 			}
-			header[y] = k
+			anchors[k] = y
 			break
 		}
 	}
-	sb := strings.Builder{}
-	for k, v := range header {
-		sb.WriteString(fmt.Sprintf("  * [%s](#%s)", v, k))
-	}
-	return sb.String()
+	return anchors
 }
