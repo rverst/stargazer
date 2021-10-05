@@ -36,6 +36,7 @@ type T struct {
 	WithToc     bool
 	WithLicense bool
 	WithStars   bool
+	WithBtt     bool
 	Keys        []string
 	Anchors     map[string]string
 	Stars       map[string][]Star
@@ -72,7 +73,7 @@ func initTemplate(tType string) (err error) {
 	return
 }
 
-func writeList(path string, stars map[string][]Star, total int, withToc, withLicense, withStars bool) error {
+func writeList(path string, stars map[string][]Star, total int, withToc, withLicense, withStars, withBtt bool) error {
 	if temp == nil {
 		return errors.New("template not initialized")
 	}
@@ -115,6 +116,7 @@ func writeList(path string, stars map[string][]Star, total int, withToc, withLic
 		WithToc:     withToc,
 		WithLicense: withLicense,
 		WithStars:   withStars,
+    WithBtt:     withBtt,
 	})
 }
 

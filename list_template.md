@@ -1,5 +1,6 @@
 {{- $wl := .WithLicense -}}
 {{- $ws := .WithStars -}}
+{{- $wb := .WithBtt -}}
 {{- $a := .Anchors -}}
 {{- $s := .Stars -}}
 # awesome stars
@@ -23,5 +24,8 @@ Total starred repositories: `{{ .Total }}`
 {{- if $ws }} (⭐️{{ .Stars }}){{ end -}}
 {{- if .Archived }} *Archived!*{{ end -}}
 {{- end }}
-{{ end }}
+{{- end }}
+{{- if $wb }} 
+
+**[⬆ back to top](#contents)**{{ end }}
 {{ end }}

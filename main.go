@@ -22,6 +22,7 @@ const (
 	defaultWithToc     = true
 	defaultWithStars   = true
 	defaultWithLicense = true
+  defaultWithBtt     = false
 
 	envUser   = "GITHUB_USER"
 	envToken  = "GITHUB_TOKEN"
@@ -32,6 +33,7 @@ const (
 	envToc     = "WITH_TOC"
 	envStars   = "WITH_STARS"
 	envLicense = "WITH_LICENSE"
+	envBttLink = "WITH_BACK_TO_TOP"
 )
 
 var (
@@ -49,7 +51,7 @@ func main() {
 	flaggy.SetVersion(version)
 
 	var user, token, output, format string
-	var test, wToc, wStars, wLicense bool
+	var test, wToc, wStars, wLicense, wBtt bool
 	wToc, wStars, wLicense = true, true, true
 	flaggy.String(&output, "o", "output-file", "the file to create (default:"+defaultOutput+" )")
 	flaggy.String(
@@ -65,6 +67,7 @@ func main() {
 	flaggy.Bool(&wToc, "", "with-toc", "print table of contents")
 	flaggy.Bool(&wStars, "", "with-stars", "print starcount of repositories")
 	flaggy.Bool(&wLicense, "", "with-license", "print license of repositories")
+	flaggy.Bool(&wBtt, "", "with-back-to-top", "generate 'back to top' links for each language")
 
 	flaggy.Parse()
 
@@ -115,6 +118,12 @@ func main() {
 			wLicense = b
 		}
 	}
+  if wBtt == defaultWithBtt {
+    v := getEnv(envBttLink, fmt.Sprintf("%t", defaultWithBtt))
+    if b, err := strconv.ParseBool(v); err == nil {
+      wBtt = b
+    }
+  }
 
 	if token == "" && !test {
 		log.Fatal("github token is required")
@@ -142,7 +151,7 @@ func main() {
 		stars[k] = v
 	}
 
-	err = writeList(output, stars, total, wToc, wLicense, wStars)
+	err = writeList(output, stars, total, wToc, wLicense, wStars, wBtt)
 	if err != nil {
 		log.Fatal(err)
 	}
