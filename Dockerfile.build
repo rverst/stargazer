@@ -25,5 +25,6 @@ ENV IGNORE_REPOS ""
 ENV WITH_TOC "true"
 ENV WITH_LICENSE "true"
 ENV WITH_STARS "true"
+ENV WITH_BACK_TO_TOP "false"
 
 ENTRYPOINT ["stargazer"]

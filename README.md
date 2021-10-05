@@ -5,7 +5,7 @@ Like an [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
 list, but personal. Automated with GitHub-Actions.
 
 See [rverst/stars](https://github.com/rverst/stars) for an example. You can use
-that repositorie as a template, the README.md will get overwritte with your own
+that repository as a template, the README.md will get overwritten with your own
 list if you run the stargazer-action (runs daily at 02:42).
 
 ## Usage
@@ -35,7 +35,7 @@ jobs:
       # Generate the list
       - name: Create star list
         id: stargazer
-        uses: rverst/stargazer@v1.2.0
+        uses: rverst/stargazer@v1
         with:
           github-user: ${{ github.actor }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -69,6 +69,7 @@ jobs:
 | with-toc | bool | false | Print table of contents (default: true) |
 | with-license | bool | false | Print license of repositories (default: true) |
 | with-stars | bool | false | Print starcount of repositories (default: true) |
+| with-back-to-top | bool | false | Generate 'back to top' links for each language (default: false) |
 
 ## Custom templates
 

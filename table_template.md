@@ -1,22 +1,30 @@
-{{- $l := .WithLicense -}}
-{{- $s := .WithStars -}}
+{{- $wl := .WithLicense -}}
+{{- $ws := .WithStars -}}
+{{- $wb := .WithBtt -}}
+{{- $a := .Anchors -}}
+{{- $s := .Stars -}}
 # awesome stars
 
 {{ .Credits.Text }}{{ .Credits.Link }}  
 Total starred repositories: `{{ .Total }}`
 
-{{ if .WithToc }}
+{{- if .WithToc }}
 ## Contents
-    {{ range $key, $value := .Stars }}
-* [{{ $key }}](#{{ anchor $key }}) ({{ len $value }})
+{{ range $key := .Keys }}
+  - [{{ $key }}](#{{ with (index $a $key) }}{{ . }}{{ end }})
+{{- end }}
+{{- end }}
+
+
+{{ range $key := .Keys }}
+## {{ $key }}
+{{ with (index $s $key) }}{{ range . }}
+| Name  | Description {{ if $wl }} | License {{ end }}{{ if $ws }} | Stars {{ end }} |
+| ----- | -----{{ if $wl }} | :---:{{ end }}{{ if $ws }} |----:{{ end }} |
+| [{{- .NameWithOwner -}}]({{- .Url -}}) | {{ .Description }} {{ if .Archived }}(*archived*){{ end }} {{ if $wl }} | {{ with .License}}{{ . }}{{ else }}-{{ end }}{{ end }} {{ if $ws }}| ⭐️{{ .Stars }}{{ end }} |
     {{- end }}
 {{- end }}
-{{ range $key, $value := .Stars }}
+{{- if $wb }} 
 
-## {{ $key }}
-    {{ range $value }}
-|     |     {{ if $l }}|     {{ end }}{{ if $s }}|     {{ end }}|
-|-----|-----{{ if $l }}|:---:{{ end }}{{ if $s }}|----:{{ end }}|
-| [{{- .NameWithOwner -}}]({{- .Url -}}) | {{ .Description }} {{ if .Archived }}(*archived*){{ end }} {{ if $l }}| {{ with .License}}{{ . }}{{ else }}-{{ end }}{{ end }} {{ if $s }}| ⭐️{{ .Stars }}{{ end }} |
-    {{- end }}
+**[⬆ back to top](#contents)**{{ end }}
 {{- end }}

@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
-	"github.com/shurcooL/githubv4"
-	"golang.org/x/oauth2"
 	"strings"
 	"time"
+
+	"github.com/shurcooL/githubv4"
+	"golang.org/x/oauth2"
 )
 
 type Star struct {
