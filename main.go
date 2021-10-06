@@ -202,7 +202,6 @@ func testStars() (stars map[string][]Star, total int) {
 
 	stars["C#"] = make([]Star, 0)
 	stars["C++"] = make([]Star, 0)
-	stars["C##"] = make([]Star, 0)
 
 	stars["C#"] = append(stars["C#"], Star{
 		Url:           "https://github.com/rverst/test",
@@ -223,7 +222,7 @@ func testStars() (stars map[string][]Star, total int) {
 		StarredAt:     time.Now(),
 	})
 
-	stars["C##"] = append(stars["C##"], Star{
+	stars["C#"] = append(stars["C#"], Star{
 		Url:           "https://github.com/rverst/test_3",
 		Name:          "test_3",
 		NameWithOwner: "rverst/test_3",
