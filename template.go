@@ -17,7 +17,7 @@ const (
 	ListTemplate  = TemplateType("list")
 	TableTemplate = TemplateType("table")
 
-	creditText = "A list of awesome repositories I've starred. Wan't your own? Try: "
+	creditText = "A list of awesome repositories I've starred. Want your own? Try: "
 	creditUrl  = "https://github.com/rverst/stargazer"
 )
 
