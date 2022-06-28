@@ -18,7 +18,7 @@ const (
 	TableTemplate = TemplateType("table")
 
 	creditText = "A list of awesome repositories I've starred. Want your own? Try: "
-	creditUrl  = "https://github.com/rverst/stargazer"
+	creditUrl  = "https://github.com/jmelfi/stargazer"
 )
 
 var availableFormats = []string{string(ListTemplate), string(TableTemplate)}
@@ -116,7 +116,7 @@ func writeList(path string, stars map[string][]Star, total int, withToc, withLic
 		WithToc:     withToc,
 		WithLicense: withLicense,
 		WithStars:   withStars,
-    WithBtt:     withBtt,
+		WithBtt:     withBtt,
 	})
 }
 
