@@ -116,6 +116,9 @@ modules.xml
 # ignore secrets
 .env
 
+# ignore runfiles
+*.run
+
 #ignore testfiles
 test.md
 test.html
