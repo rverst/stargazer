@@ -17,8 +17,8 @@ const (
 	ListTemplate  = TemplateType("list")
 	TableTemplate = TemplateType("table")
 
-	creditText = "Programaticly generated list of awesome starred repositories. Generate your own with "
-	creditUrl  = "https://github.com/jmelfi/stargazer"
+	creditText = "A list of awesome repositories I've starred. Want your own? Try: "	
+	creditUrl  = "https://github.com/rverst/stargazer"
 )
 
 var availableFormats = []string{string(ListTemplate), string(TableTemplate)}
@@ -98,7 +98,7 @@ func writeList(path string, stars map[string][]Star, total int, withToc, withLic
 	c := C{
 		Text: creditText,
 		Url:  creditUrl,
-		Link: "[stargazer](" + creditUrl + ")!",
+		Link: "[stargazer](" + creditUrl + ")",
 	}
 
 	keys := make([]string, 0)
