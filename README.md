@@ -82,5 +82,4 @@ If you use a custom template, please be so kind and credit this repository, than
 ## Inspiration
 
 *stargazer* is inspired by [starred](https://github.com/gmolveau/starred),
-which is very similar and written in python. I created *stargazer* because I
-wanted to try out the [GitHub GraphQL API v4](https://docs.github.com/en/graphql).
+which is very similar and written in python. I created *stargazer* because I wanted to try out the [GitHub GraphQL API v4](https://docs.github.com/en/graphql).
