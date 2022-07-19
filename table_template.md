@@ -3,7 +3,7 @@
 {{- $wb := .WithBtt -}}
 {{- $a := .Anchors -}}
 {{- $s := .Stars -}}
-# awesome stars
+# Awesome Starred Repos List
 
 {{ .Credits.Text }}{{ .Credits.Link }}  
 Total starred repositories: `{{ .Total }}`
