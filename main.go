@@ -22,7 +22,7 @@ const (
 	defaultWithToc     = true
 	defaultWithStars   = true
 	defaultWithLicense = true
-  defaultWithBtt     = false
+	defaultWithBtt     = false
 
 	envUser   = "GITHUB_USER"
 	envToken  = "GITHUB_TOKEN"
@@ -118,12 +118,12 @@ func main() {
 			wLicense = b
 		}
 	}
-  if wBtt == defaultWithBtt {
-    v := getEnv(envBttLink, fmt.Sprintf("%t", defaultWithBtt))
-    if b, err := strconv.ParseBool(v); err == nil {
-      wBtt = b
-    }
-  }
+	if wBtt == defaultWithBtt {
+		v := getEnv(envBttLink, fmt.Sprintf("%t", defaultWithBtt))
+		if b, err := strconv.ParseBool(v); err == nil {
+			wBtt = b
+		}
+	}
 
 	if token == "" && !test {
 		log.Fatal("github token is required")

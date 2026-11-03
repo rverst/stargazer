@@ -1,10 +1,10 @@
-FROM golang:1.17 AS builder
+FROM golang:1.27 AS builder
 
 ARG VERSION=unknown
 
 WORKDIR $GOPATH/src/github.com/rverst/stargazer
 
-ENV CGO_ENABLED 0
+ENV CGO_ENABLED=0
 ENV GOOS=linux
 ENV GOARCH=amd64
 
@@ -12,19 +12,19 @@ COPY . .
 
 RUN go build -ldflags="-X 'main.version=${VERSION}'" -o /stargazer
 
-FROM alpine
+FROM alpine:3.24
 
 COPY --from=builder /stargazer /usr/bin/stargazer
 RUN mkdir /data
 
-ENV OUTPUT_FILE "/data/README.md"
-ENV OUTPUT_FORMAT "list"
-ENV GITHUB_USER ""
-ENV GITHUB_TOKEN ""
-ENV IGNORE_REPOS ""
-ENV WITH_TOC "true"
-ENV WITH_LICENSE "true"
-ENV WITH_STARS "true"
-ENV WITH_BACK_TO_TOP "false"
+ENV OUTPUT_FILE="/data/README.md"
+ENV OUTPUT_FORMAT="list"
+ENV GITHUB_USER=""
+ENV GITHUB_TOKEN=""
+ENV IGNORE_REPOS=""
+ENV WITH_TOC="true"
+ENV WITH_LICENSE="true"
+ENV WITH_STARS="true"
+ENV WITH_BACK_TO_TOP="false"
 
 ENTRYPOINT ["stargazer"]

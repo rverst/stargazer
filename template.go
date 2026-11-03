@@ -116,7 +116,7 @@ func writeList(path string, stars map[string][]Star, total int, withToc, withLic
 		WithToc:     withToc,
 		WithLicense: withLicense,
 		WithStars:   withStars,
-    WithBtt:     withBtt,
+		WithBtt:     withBtt,
 	})
 }
 
