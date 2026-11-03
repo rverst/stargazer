@@ -2,12 +2,29 @@ package main
 
 import (
 	"context"
+	"net/http"
 	"strings"
 	"time"
 
 	"github.com/shurcooL/githubv4"
-	"golang.org/x/oauth2"
 )
+
+const defaultGraphQLURL = "https://api.github.com/graphql"
+
+// graphQLURL is a variable so that tests can point the client at a fake server.
+var graphQLURL = defaultGraphQLURL
+
+// bearerTransport adds a static access token to every request.
+type bearerTransport struct {
+	token string
+	base  http.RoundTripper
+}
+
+func (t bearerTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	req = req.Clone(req.Context())
+	req.Header.Set("Authorization", "Bearer "+t.token)
+	return t.base.RoundTrip(req)
+}
 
 type Star struct {
 	Url           string
@@ -62,10 +79,9 @@ func fetchStars(user string, token string) (stars map[string][]Star, total int, 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute*3)
 	defer cancel()
 
-	src := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: token})
-	httpClient := oauth2.NewClient(ctx, src)
+	httpClient := &http.Client{Transport: bearerTransport{token: token, base: http.DefaultTransport}}
 
-	client := githubv4.NewClient(httpClient)
+	client := githubv4.NewEnterpriseClient(graphQLURL, httpClient)
 
 	vars := map[string]interface{}{
 		"login":  githubv4.String(user),

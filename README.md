@@ -48,7 +48,8 @@ jobs:
           git config --local user.email "actions@noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add .
-          git commit -m "Update list"
+          # Star lists don't change every day, so skip the commit if there is nothing to commit
+          git diff --staged --quiet || git commit -m "Update list"
 
       # Push the changes
       - name: Push
